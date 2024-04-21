@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const useWeather = () => {
     const [weatherData, setWeatherData] = useState({
@@ -68,7 +68,24 @@ const useWeather = () => {
                 message: ""
             })
         }
+    };
+
+    useEffect(() => {
+        setLoading({
+            loading: true,
+            message: "Finding location..."
+        })
+
+        navigator.geolocation.getCurrentPosition(function (position) {
+            fetchWeatherData(position.coords.latitude, position.coords.longitude);
+        })
+    }, []);
+
+    return {
+        weatherData,
+        error,
+        loading,
     }
-
-
 }
+
+export default useWeather;
